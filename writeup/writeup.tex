@@ -90,7 +90,7 @@ The remaining parts of the image are masked by adjusting the variables \emph{xst
 The \emph{scale} factor was chosen by trial-and-error, the choice of $1.0$ for ``far'', $1.5$ for ``mid'' and $2.5$ for ``near'' worked quite well.
 Each processed fragment image was divided into cells.
 The hog features were extracted for all cells at once, and sub-sampled to obtain features for each window.
-This greatly reduced the time of execution, as compared to separate sliding window implementation; the processing time on a modern laptop was similar to the length of the video,
+This greatly reduced the time of execution, as compared to separate sliding window implementation; the processing time on a modern laptop was of order of magnitude of the length of the video,
 which suggests that it could have been possible to implement the pipeline for real-time video processing.
 
 The sliding windows were created by telling the function, how many cells to shift to obtain the next window (the variable \emph{cells\_per\_block}).

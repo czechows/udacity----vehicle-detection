@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1504482220 "writeup.tex" "writeup.pdf" "writeup" 1504482221
+["pdflatex"] 1504482649 "writeup.tex" "writeup.pdf" "writeup" 1504482650
   "../snapshots/1.png" 1504474023 671688 f6153aea603b1a71f1b4c926e56a8e05 ""
   "../snapshots/4.png" 1504474086 689942 2b0357199e04ae1d28a0a9867c6549fb ""
   "../snapshots/5.png" 1504474100 685313 7b30d2dca76d5ddfcb4e0770994e1992 ""
@@ -137,9 +137,9 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1501615481 32585 d82bbcf7626b7842c87671687479e852 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1502540548 2247405 16c0e96a13a80e4c076807127a5569c8 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1502540535 7735972 02389bf72fd8937610b78536c3a65883 ""
-  "writeup.aux" 1504482220 4104 ccc2719201dce5e2a20fb8241b6f59ca ""
-  "writeup.out" 1504482220 1940 33546050e3edaa6a67d17c1a37dd34cc ""
-  "writeup.tex" 1504482218 10459 e9cb0bb3e366656ca1238e6583c2066c ""
+  "writeup.aux" 1504482650 4104 ccc2719201dce5e2a20fb8241b6f59ca ""
+  "writeup.out" 1504482650 1940 33546050e3edaa6a67d17c1a37dd34cc ""
+  "writeup.tex" 1504482648 10473 806e83576f64a706a39923ba60a4bb3e ""
   (generated)
   "writeup.aux"
   "writeup.out"
