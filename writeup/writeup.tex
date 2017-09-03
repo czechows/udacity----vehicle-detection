@@ -17,7 +17,7 @@
 
 The purpose of this project was to implement a vehicle detection and tracking algorithm.
 The main goal of the project was to reliably detect the vehicles in the video project\_video.mp4.
-The objective was achieved, as documented in the video output.mp4.
+The objective was achieved, as documented in the video output\_FINAL.mp4.
 All the relevant code is contained in the notebook VD.ipynb.
 
 \section{Rubric points}
@@ -26,19 +26,19 @@ All the relevant code is contained in the notebook VD.ipynb.
 
 \subsubsection{Explain how (and identify where in your code) you extracted HOG features from the training images. Explain how you settled on your final choice of HOG parameters.}
 
-The features for the classifier are extracted by the \emph{extract\_features} function,
-and are formed by a vector that consists of three parts:
+The features for the classifier were extracted by the \emph{extract\_features} function,
+and were formed by a vector that consists of three parts:
 %
 \begin{itemize}
   \item spatial features,
-  \item a color feature histogram,
+  \item a color histogram,
   \item histogram of oriented gradients (\emph{hog}).
 \end{itemize}
 
 The code for each extraction is contained in functions 
 \emph{bin\_spatial}, \emph{color\_hist}, and \emph{get\_hog\_features}, respectively.
 
-Many adjustments have been made to find a combination of parameters that give a satisfactory accuracy for the classifier.
+Many adjustments have been made to find a combination of parameters that would give a satisfactory accuracy for the classifier.
 As a rule of thumb, any combination that would yield accuracy below 99\% was discarded.
 Once I found a combination, that gives accuracy of above 99\%, I decided to stick with it,
 and try to improve the performance of the detector on the video during the video processing part.
@@ -52,160 +52,146 @@ orient &= 8 \\
 pix\_per\_cell &= 8 \\
 cell\_per\_block &= 2 \\
 hog\_channel &= 0 \\
-spatial\_size &= (32, 32) \\
-hist\_bins &= 32 
 \end{align*}
 
 The spatial binning features were set to $(32,32)$
-and the number of color histogram feature bins to 32.
+and the number of color histogram feature bins was set to 32.
 
 I was experimenting with $YCrCb$ color space that was reported to give good performance on the forums,
 however I could not fine tune it to obtain satisfiable results.
 
 \subsubsection{Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).}
 
-The classifier was trained in the 6th block of code of the jupyter notebook,
+The classifier was trained in the 5th block of code of the jupyter notebook,
 the one starting with the comment \emph{HERE WE TRAIN THE CLASSIFIER}.
 
 An instance of \emph{StandardScaler} was used to scale the features before training.
 The same scaler was later used in the video pipeline in the \emph{find\_cars} function.
 
-The classifier was trained by use of the Linear Support Vector Classification method with default configuration.
+The classifier was trained by use of the Linear Support Vector Classification method with the default configuration.
 The images, where a car is present were labelled with $1$, and the ones without a car with $0$.
 The classifier based on Linear SVC method took about 13 seconds to complete the computations and achieved a test accuracy of 0.9903
 (20\% of images were used to form the test set).
 
 
+\subsection{Sliding window search}
 
-%Besides the choice of the features (as discussed in the previous point),
-%the performance was directly affected by the size of the sample.
-%Initially I would subsample to 7000 images to reduce the memory usage,
-%but then I just trained the network on a more powerful laptop.
+\subsubsection{Describe how (and identify where in your code) you implemented a sliding window search. How did you decide what scales to search and how much to overlap windows?}
 
+The sliding window implementation is contained in the function \emph{find\_cars},
+which at the same time is used to make predictions.
 
-\subsection{Pipeline}
+One of the function arguments is \emph{scale}, which determines how to rescale 
+the image accordingly to the size of vehicles expected to appear.
+Images were divided into three (overlapping) parts, the first one represented where we expect the vehicles to be far from the camera,
+the second -- where they are at medium distance, and the third -- where to look at close distance.
+The remaining parts of the image are masked by adjusting the variables \emph{xstart, xstop, ystart, ystop} in each case.
 
-Below, I summarize my pipeline, which is executed in the function \emph{process\_image}.
+The \emph{scale} factor was chosen by trial-and-error, the choice of $1.0$ for ``far'', $1.5$ for ``mid'' and $2.5$ for ``near'' worked quite well.
+Each processed fragment image was divided into cells.
+The hog features were extracted for all cells at once, and sub-sampled to obtain features for each window.
+This greatly reduced the time of execution, as compared to separate sliding window implementation; the processing time on a modern laptop was similar to the length of the video,
+which suggests that it could have been possible to implement the pipeline for real-time video processing.
 
-\subsubsection{Provide an example of a distortion-corrected image.}
+The sliding windows were created by telling the function, how many cells to shift to obtain the next window (the variable \emph{cells\_per\_block}).
+For this pipeline, I have chosen the same settings as in the classroom, since they gave reasonably good results.
+The final settings were:
+%
+\begin{itemize}
+  \item 8 pixels per cell,
+  \item 8 cells per window (so 64 pixels in each window),
+  \item 2 \emph{cells\_per\_block} (so 75\% overlap between the consecutive windows).
+\end{itemize}
 
-A distortion-free image from the road is provided below:
+\subsubsection{Show some examples of test images to demonstrate how your pipeline is working. How did you optimize the performance of your classifier?}\label{subsection}
+
+The pipeline is implemented in the \emph{process\_image} function.
+
+As discussed in the previous subsection, the pipeline consists of three separate sliding window searches,
+first one for far objects near the middle of the image, then for mid-ranged objects, a bit closer to the bottom,
+and then for close objects, at the bottom of each image. This greatly enhances the chance of finding a vehicle,
+regardless of its relative size in the camera snapshot.
+
+To remove the duplicates and false positives, a heatmap approach ws used.
+Based on the three searches, a heatmap was created. Wherever a detection occured,
+a value of of $1$ was added to the heatmap, see function \emph{add\_heat}. 
+Due to overlapping search windows, and overlapping search areas, 
+the parts of the image containing a vehicle would obtain a high score.
+Spurious detections, which result in a low score, were filtered by the function \emph{apply\_threshold},
+which resets to $0$ all parts of a heatmap with score below a certain threshold.
+The threshold was applied after each search (so separately for far/mid/near detection),
+and the threshold values have been set (after some fine-tuning) to $2.1$/$1.0$/$1.5$, respectively.
+
+At the end of each frame the heatmap was saved to variable \emph{saved\_heat}, and a fraction of it (with coefficient $0.92$, set by trial-and-error)
+was added to the next heatmap. 
+This represents the belief, that a vehicle on next frame is likely to appear close to the position of the vehicle on the previous frame, see Figure \ref{fig2}.
+It also explains, why I have chosen fractional values for the thresholds.
 
 \begin{figure}[h]
   \begin{center}
-    a
+    \includegraphics[width=50mm]{../snapshots/6.png}
     \quad
-  \caption{A road photo, before undistortion (left) and after (right).}
+    \includegraphics[width=50mm]{../snapshots/7.png}
 \end{center}
-\end{figure}
+\caption{The ``memory term'' allows to keep track of the vehicle even on a surface of similar color.}
+\end{figure}\label{fig2}
 
-\subsubsection{Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image. 
-Provide an example of a binary image result.}
+The function \emph{scipy.ndimage.measurements.label} was applied to find the connected components of the filtered heatmap, see Figure \ref{fig1}.
+Then, the function \emph{draw\_labeled\_bboxes} was used 
+to draw bounding box at the positions of labeled areas on the original images.
 
-After undistorting, I used a combination of color and gradient thresholds. The thresholding is performed in the master function \emph{combine\_threshold},
-which calls each of the subfunctions that perform the thresholding, and overlays the resulting binary output on a single image.
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[width=50mm]{../snapshots/1.png}
+    \quad
+    \includegraphics[width=50mm]{../snapshots/5.png}
+\end{center}
+\caption{The labeling-bounding box approach allows to merge duplicate detections.}
+\end{figure}\label{fig1}
 
-Namely, I used the following thresholds:
-%
-\begin{itemize}
-  \item Canny edge detection (function \emph{Canny\_threshold}) with $\emph{minVal}=50$ and  $\emph{maxVal}=150$;
-  \item a color threshold based on the S channel in the HLS color space (function \emph{hls\_threshold}), activation for $S \in [70,255]$;
-  \item a Sobel threshold, both in $x$ and $y$ directions (functions \emph{abs\_sobel\_thresh} and \emph{combine\_Sobel}), with range $[10,255]$ and $kernel=3$
-    for both. The Sobel thresholds are taken in conjunction, i.e. only the pixels selected in both directions contribute to the final binary output.
-\end{itemize}
+\subsection{Video Implementation}
 
-I also implemented magnitude and direction thresholds (functions \emph{mag\_thresh}, \emph{dir\_threshold} and \emph{combine\_MagDir}),
-but ultimately they were not included in the pipeline, as they did not bring any significant improvement.
-Regardless, I will keep the implementation for future.
-
-\subsubsection{Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.}
-
-The perspective transform was performed in two steps.
-First, one of the straight lines images was used to identify four corner points to define the transform,
-which were in turn used to compute the perspective transform matrix
-(the function \emph{get\_perspective\_transform}, using \emph{cv2.getPerspectiveTransform}).
-
-The second step was to apply the matrix $M$ obtained from \emph{cv2.getPerspectiveTransform} to the processed image.
-\subsubsection{Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?}
-
-In order to identify lane-line pixels, I performed the procedure of finding window centroids, as described in details in the course.
-To give a rough overview, the image is divided into 9 horizontal layers. Within each layer, a window search is performed,
-by convolving the binary image from the previous step, with a sliding window. 
-The position, where the window yielded highest activation is selected,
-and the center of each such window is later used to fit the polynomial (function \emph{find\_window\_centroids}).
-
-Each (left/right) set of window centroids has been interpolated as a function of $Y$ (so rotated 90 degrees), with a polynomial of the form:
-%
-$$
- X = AY^2 + BY + C
-$$
-
-Simple reality checks were performed to stabilize the interpolation for the video (function \emph{reality\_checks}).
-It is expected, that the polynomial curves will vary continuously from frame to frame,
-so if the difference between the current and the previous curve (in $L^2$ norm) would exceed a given threshold,
-then a replacement curve (based on previous frames) was substituted.
-
-The thresholds were set to 600 for the left lane line and 200 for the right lane line.
-The x-values for the replacement curve were computed with a power series:
-
-$$
-x_{saved}(t) = (1/3) \sum_{i} (2/3)^{i-1}x(t-i) 
-$$
-%
-and stored in the \emph{saved\_line} class instance.
-The coefficients in this series were chosen quite arbitrarily, but seem to have a nice smoothing effect on the video.
-
-
-\subsubsection{Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.}
-
-The curvature and the respective position was calculated in the function \emph{curvature\_and\_offset}.
-
-The curves are second order polynomials, so the radius of curvature can be computed from the formula 
-%
-$$
-  R_{curve} = \frac{(1+(2AY+B)^2)^{3/2}}{|2A|}.
-$$
-%
-Then, I averaged from the values of the left and the right lane line.
-
-
-To compute the displacement, I assumed that the camera is mounted in the middle of the car.
-Then, the formula the displacement is simple, since in a centered position the left and the right line needs to be equidistant from the center,
-and sum up to the width of the image:
-%
-$$
- \text{displacement} = (\text{image\_width} - C_{left} - C_{right})/2.
-$$
-
-In these computations I assume I am at the bottom of the image, which in my pipeline corresponds to $Y=0$
-(as contrary to $Y=Y_{max}$ in the example pipeline).
-Values above zero indicate that the car is on the right side of the lane, below zero, that it is left of the center.
-
-The calculations were performed in meters, and I assumed that each pixel consists of 60/720 meters in the y direction and 3.7/700 meters in the x direction.
-In the y direction I have about twice as many meters per pixel, as recommended in the course, but this is because I choose my perspective transform
-in such a way, that the lines are more squeezed in the vertical direction.
-The curvature and displacement values were displayed in the upper left corner of the processed images and of the video.
-
-
-
-\subsubsection{ Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.}
-
-Outputs of all provided test images are displayed below:
-\subsection{Pipeline (video)}
 
 \subsubsection{Provide a link to your final video output. Your pipeline should perform reasonably well on the entire project video 
-(wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!)}
+(somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)}
 
-Here is a link to the \href{https://github.com/czechows/udacity----advanced-lane-lines/blob/master/output.mp4}{\textbf{output video}}.
+The final video output can be found below:
+\href{https://github.com/czechows/udacity----vehicle-detection/blob/master/output_FINAL.mp4}{https://github.com/czechows/udacity----vehicle-detection/blob/master/output\_FINAL.mp4}.
+
+As one can see, both the white and the black vehicle are tracked throughout the whole video, though the size and shape of the bounding box evolves.
+There are almost no multiple detections for single vehicles, and if a multiple detection forms,
+it is quickly merged into a single detection (e.g. Figure \ref{fig1}).
+
+
+\subsubsection{Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.}
+
+The filter for false positives is implemented in the \emph{apply\_threshold} function,
+and the overlapping bounding boxes are combined by the \emph{scipy.ndimage.measurements.label} function,
+which identifies connected components of the positive part of the heatmap.
+A ``memory'' term was added to the heatmap to increase the probability of finding vehicles near the detections from previous frames.
+
+The precise explanation is included in the answer to the rubric point \ref{subsection}, where I describe my pipeline, and show images which relate to the question.
 
 \subsection{Discussion}
 
 \subsubsection{Briefly discuss any problems / issues you faced in your implementation of this project. Where will your pipeline likely fail? What could you do to make it more robust?}
 
-The pipeline does not really perform well on the challenge videos.
-A more structured approach to backtracing history and reality checks could have been taken (which would incorporate e.g. confidence in the result),
-but given time constraints only a limited version of these was implemented.
+In the choice of parameters, I took a conservative approach, that it is better to detect too much than too little.
+In real world this would be crucial for the safety of the autonomous vehicle.
 
-Also, some variables could have been precomputed outside of the pipeline, which would have accelerated video processing.
+Such goal forced me to choose a fairly high value of the ``memory'' term,
+so I could track both vehicles throughout the whole video, without losing them at any of the frames.
+The downside of the approach is that there are still some false positives in the video,
+although they disappear fairly quickly, as the video progresses (see Figure \ref{fig3}).
+
+A larger dataset and a better classifier (perhaps a neural network) would allow to reliably detect e.g. white vehicles on white background, 
+remove the need for the memory term, and reduce the number of false positives.
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[width=60mm]{../snapshots/4.png}
+\end{center}
+\end{figure}\label{fig3}
 
 \end{document}
+

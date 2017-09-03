@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Arch Linux) (preloaded format=pdflatex 2017.8.12)  3 SEP 2017 22:05
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Arch Linux) (preloaded format=pdflatex 2017.8.12)  4 SEP 2017 01:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -902,44 +902,85 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Overfull \hbox (36.48935pt too wide) in paragraph at lines 128--129
-[]\OT1/cmr/m/n/10 (-20) The sec-ond step was to ap-ply the ma-trix $\OML/cmm/m/
-it/10 M$ \OT1/cmr/m/n/10 (-20) ob-tained from \OT1/cmr/m/it/10 (-20) cv2.getPer
-spectiveTransform
+<../snapshots/6.png, id=74, 1284.8pt x 722.7pt>
+File: ../snapshots/6.png Graphic file (type png)
+<use ../snapshots/6.png>
+Package pdftex.def Info: ../snapshots/6.png  used on input line 132. on input l
+ine 132.
+Package pdftex.def Info: Requested size: 142.26378pt x 80.01553pt on input line
+ 132.
+<../snapshots/7.png, id=75, 1284.8pt x 722.7pt>
+File: ../snapshots/7.png Graphic file (type png)
+<use ../snapshots/7.png>
+Package pdftex.def Info: ../snapshots/7.png  used on input line 134. on input l
+ine 134.
+Package pdftex.def Info: Requested size: 142.26378pt x 80.01553pt on input line
+ 134.
+ [3 <../snapshots/6.png (PNG copy)> <../snapshots/7.png (PNG copy)>]
+<../snapshots/1.png, id=82, 1284.8pt x 722.7pt>
+File: ../snapshots/1.png Graphic file (type png)
+<use ../snapshots/1.png>
+Package pdftex.def Info: ../snapshots/1.png  used on input line 145. on input l
+ine 145.
+Package pdftex.def Info: Requested size: 142.26378pt x 80.01553pt on input line
+ 145.
+<../snapshots/5.png, id=83, 1284.8pt x 722.7pt>
+File: ../snapshots/5.png Graphic file (type png)
+<use ../snapshots/5.png>
+Package pdftex.def Info: ../snapshots/5.png  used on input line 147. on input l
+ine 147.
+Package pdftex.def Info: Requested size: 142.26378pt x 80.01553pt on input line
+ 147.
+
+Overfull \hbox (6.73286pt too wide) in paragraph at lines 158--160
+\OT1/cmr/m/n/10 (-20) The fi-nal video out-put can be found be-low: []https://g
+ithub.com/czechows/udacity---
  []
 
-[3] [4] [5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 211.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 211.
+
+Overfull \hbox (21.42238pt too wide) in paragraph at lines 168--172
+\OT1/cmr/m/n/10 (-20) the over-lap-ping bound-ing boxes are com-bined by the \O
+T1/cmr/m/it/10 (-20) scipy.ndimage.measurements.label
+ []
+
+[4 <../snapshots/1.png (PNG copy)> <../snapshots/5.png (PNG copy)>]
+<../snapshots/4.png, id=94, 1284.8pt x 722.7pt>
+File: ../snapshots/4.png Graphic file (type png)
+<use ../snapshots/4.png>
+Package pdftex.def Info: ../snapshots/4.png  used on input line 192. on input l
+ine 192.
+Package pdftex.def Info: Requested size: 170.71652pt x 96.02747pt on input line
+ 192.
+ [5 <../snapshots/4.png (PNG copy)>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 196.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 196.
  (./writeup.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 211.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 211.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 196.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 196.
 Package rerunfilecheck Info: File `writeup.out' has not changed.
-(rerunfilecheck)             Checksum: E3B5E3A2AF3A23978336796686717130;2367.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 211.
+(rerunfilecheck)             Checksum: 33546050E3EDAA6A67D17C1A37DD34CC;1940.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 196.
  ) 
 Here is how much of TeX's memory you used:
- 17370 strings out of 492990
- 320252 string characters out of 6138688
- 417929 words of memory out of 5000000
- 20562 multiletter control sequences out of 15000+600000
- 12575 words of font info for 73 fonts, out of 8000000 for 9000
+ 17397 strings out of 492990
+ 320622 string characters out of 6138688
+ 419626 words of memory out of 5000000
+ 20579 multiletter control sequences out of 15000+600000
+ 11916 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,11n,54p,388b,389s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,11n,54p,388b,345s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmmi7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr
-/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><
-/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on writeup.pdf (5 pages, 164959 bytes).
+ts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/
+share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmti10.pfb>
+Output written on writeup.pdf (5 pages, 3589364 bytes).
 PDF statistics:
- 148 PDF objects out of 1000 (max. 8388607)
- 127 compressed objects within 2 object streams
- 22 named destinations out of 1000 (max. 500000)
- 13445 words of extra memory for PDF output out of 14400 (max. 10000000)
+ 136 PDF objects out of 1000 (max. 8388607)
+ 113 compressed objects within 2 object streams
+ 20 named destinations out of 1000 (max. 500000)
+ 12422 words of extra memory for PDF output out of 14400 (max. 10000000)
 
